@@ -5,58 +5,6 @@ prolog = Prolog()
 
 prolog.consult('guesswho.pl')
 
-def compare_prolog_db(a, b, count = 10000):
-    avg = [[],[]]
-    g_sum =  [{},{}]
-    app_sum = {}
-
-    for char in CHARACTERS:
-        g_sum[0][char] = 0
-        g_sum[1][char] = 0
-        app_sum[char] = 0
-
-    for i in range(count):
-
-        r_char = random.choice(CHARACTERS)
-        app_sum[r_char] += 1
-
-        prolog.consult(a)
-        char, question_count = find_character(r_char)
-        avg[0].append(question_count)
-
-        g_sum[0][char] += question_count
-
-        prolog.consult(b)
-        char, question_count = find_character(r_char)
-        avg[1].append(question_count)
-
-        g_sum[1][char] += question_count
-        print(i)
-
-
-    a = sum(avg[0]) / count
-    b = sum(avg[1]) / count
-
-    print(a)
-    print(b)
-
-    print((b) / (a))
-
-    print(g_sum[0])
-    print(g_sum[1])
-
-    diff_avg = 0
-    diff_wgt_avg = 0
-
-    for name in g_sum[0].keys():
-        diff = g_sum[1][name] - g_sum[0][name]
-        print(f"{name}: {diff} {(diff) / app_sum[name]}")
-        diff_avg += diff
-        diff_wgt_avg += (diff) / app_sum[name]
-
-    print(f"avg: {diff_avg / len(CHARACTERS)}")
-    print(f"w_avg: {diff_wgt_avg / len(CHARACTERS)}")
-
 def prolog_query(query, id = None):
     values = list(prolog.query(query))
 
@@ -91,8 +39,51 @@ def update_properties(props, current_properties, has_prop):
     return out
 
 def select_propertie(dist, props):
+
+    curr_sum = 0
+
+    keep_finding = True
+
+    curr_props = []
+
+    max_leng = len(props) // 2
+
+    while keep_finding:
+        values = list(dist.values())
+        curr_count = max(values)
+
+        if curr_count + curr_sum <= max_leng:
+            prop = max(dist, key=dist.get)
+            curr_props.append(prop)
+            curr_sum += curr_count        
+            props = update_properties(props, [prop], False)
+            dist = sum_properties(props)
+            continue
+
+        diff = max_leng - curr_sum
+
+        key = list(dist.keys())
+
+        for i in range(diff, -1, -1):
+            if i in values:
+                index = values.index(i)
+                prop = key[index]
+                curr_props.append(prop)
+                curr_sum += i  
+                props = update_properties(props, [prop], False)
+                dist = sum_properties(props)
+                if i == diff:
+                    keep_finding = False
+                break
+        
+        keep_finding = False
+
+    return curr_props
+
+def select_propertie_old(dist, props):
     keys =  list(dist.keys())
     random.shuffle(keys)
+
     dist = dict([(key, dist[key]) for key in keys])
 
     if len(dist) > 3 and len(props) > 2:
@@ -118,14 +109,13 @@ def sum_properties(properties):
 def get_character(seen_props):   
     return prolog_query(f"character(X, [{','.join(seen_props)}])", "X")[0]
 
-
 CHARACTERS = prolog_query("character(X, _)", "X")
 
 def main():
-    CHOOSEN_CHARACTER = random.choice(CHARACTERS)
-    find_character(CHOOSEN_CHARACTER)
+    choosen_character = random.choice(CHARACTERS)
+    find_character(choosen_character)
 
-def find_character(CHOOSEN_CHARACTER):
+def find_character(choosen_character, select_propertie_func = select_propertie):
     SEEN_PROPS = []
 
     properties = prolog_query("character(_, X)", "X")
@@ -161,14 +151,14 @@ def find_character(CHOOSEN_CHARACTER):
             SEEN_PROPS = []     
             propertie_distr = sum_properties(properties)
 
-        current_properties = select_propertie(propertie_distr, properties)
+        current_properties = select_propertie_func(propertie_distr, properties)
 
         final_has_prop_or = False
 
         for current_property in current_properties:
             SEEN_PROPS.append(current_property)    
             # ask if char prop
-            has_property = bool(prolog_query(f"character_has_property({CHOOSEN_CHARACTER}, {current_property})"))
+            has_property = bool(prolog_query(f"character_has_property({choosen_character}, {current_property})"))
             if has_property:
                 final_has_prop_or = True
 
@@ -177,7 +167,7 @@ def find_character(CHOOSEN_CHARACTER):
            # update props
         properties = update_properties(properties, current_properties, has_property)
 
-        print(f"{current_property}{' not' if not has_property else ''} found on character")
+        print(f"{', '.join(current_properties)}{' not' if not has_property else ''} found on character")
         print()
         
 main()
