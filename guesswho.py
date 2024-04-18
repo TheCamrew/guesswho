@@ -1,21 +1,8 @@
-from pyswip import Prolog
+from prolog import prolog_query, prolog
 import random
-
-prolog = Prolog()
 
 prolog.consult('guesswho.pl')
 
-def prolog_query(query, id = None):
-    values = list(prolog.query(query))
-
-    out = []
-    if id is not None:
-        for value in values:
-            out.append(value[id])
-    else:
-        return values
-    
-    return out
 
 def update_properties(props, current_properties, has_prop):
     out = []

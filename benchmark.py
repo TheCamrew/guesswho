@@ -1,9 +1,7 @@
-from pyswip import Prolog
+from prolog import prolog
 import random
 
 from guesswho import CHARACTERS, find_character
-
-prolog = Prolog()
 
 def compare_prolog_db(a, b, count = 10000):
     avg = [[],[]]
@@ -49,6 +47,8 @@ def compare_prolog_db(a, b, count = 10000):
     diff_wgt_avg = 0
 
     for name in g_sum[0].keys():
+        if app_sum[name] == 0:
+            continue
         diff = g_sum[1][name] - g_sum[0][name]
         print(f"{name}: {diff} {(diff) / app_sum[name]}")
         diff_avg += diff
