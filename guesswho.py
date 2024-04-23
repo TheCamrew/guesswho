@@ -55,8 +55,11 @@ def select_propertie(dist, props):
 
         diff = max_leng - curr_sum
 
+        found_some = False
+
         for i in range(diff, -1, -1):
             if i in values:
+                found_some = True
                 index = values.index(i)
                 prop = keys[index]
                 curr_props.append(prop)
@@ -67,7 +70,8 @@ def select_propertie(dist, props):
                     keep_finding = False
                 break
         
-        keep_finding = False
+        if not found_some:
+            keep_finding = False
 
     return curr_props
 
@@ -189,9 +193,10 @@ def main():
 
     if in_val == 1:
         print(', '.join(CHARACTERS))
-        choosen_character = input("Choose a character: ")
+        choosen_character = input("Choose a character or Enter to select random: ")
         if choosen_character not in CHARACTERS:
             choosen_character = random.choice(CHARACTERS)
+            print(f"Choosen character is {choosen_character}")
 
     find_character(choosen_character, bool(in_val))
 
