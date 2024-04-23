@@ -36,6 +36,12 @@ def select_propertie(dist, props):
     max_leng = len(props) // 2
 
     while keep_finding:
+        keys = list(dist.keys())
+
+        random.shuffle(keys)
+
+        dist = dict([(key, dist[key]) for key in keys])
+
         values = list(dist.values())
         curr_count = max(values)
 
@@ -49,12 +55,10 @@ def select_propertie(dist, props):
 
         diff = max_leng - curr_sum
 
-        key = list(dist.keys())
-
         for i in range(diff, -1, -1):
             if i in values:
                 index = values.index(i)
-                prop = key[index]
+                prop = keys[index]
                 curr_props.append(prop)
                 curr_sum += i  
                 props = update_properties(props, [prop], False)
@@ -98,9 +102,6 @@ def get_character(seen_props):
 
 CHARACTERS = prolog_query("character(X, _)", "X")
 
-def main():
-    choosen_character = random.choice(CHARACTERS)
-    find_character(choosen_character)
 
 def find_character(choosen_character, select_propertie_func = select_propertie):
     SEEN_PROPS = []
@@ -157,4 +158,12 @@ def find_character(choosen_character, select_propertie_func = select_propertie):
         print(f"{', '.join(current_properties)}{' not' if not has_property else ''} found on character")
         print()
         
+
+def main():
+    print(', '.join(CHARACTERS))
+    choosen_character = input("Choose a character: ")
+    if choosen_character not in CHARACTERS:
+        choosen_character = random.choice(CHARACTERS)
+    find_character(choosen_character)
+
 main()
