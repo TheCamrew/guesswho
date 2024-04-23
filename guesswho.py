@@ -103,7 +103,7 @@ def get_character(seen_props):
 CHARACTERS = prolog_query("character(X, _)", "X")
 
 
-def find_character(choosen_character, select_propertie_func = select_propertie):
+def find_character(choosen_character, auto_mode = True, select_propertie_func = select_propertie):
     SEEN_PROPS = []
 
     properties = prolog_query("character(_, X)", "X")
@@ -143,14 +143,31 @@ def find_character(choosen_character, select_propertie_func = select_propertie):
 
         final_has_prop_or = False
 
-        for current_property in current_properties:
-            SEEN_PROPS.append(current_property)    
-            # ask if char prop
-            has_property = bool(prolog_query(f"character_has_property({choosen_character}, {current_property})"))
-            if has_property:
-                final_has_prop_or = True
+        if auto_mode:
 
-        has_property = final_has_prop_or
+            for current_property in current_properties:
+                SEEN_PROPS.append(current_property)    
+                # ask if char prop
+                has_property = bool(prolog_query(f"character_has_property({choosen_character}, {current_property})"))
+                if has_property:
+                    final_has_prop_or = True
+
+            has_property = final_has_prop_or
+        else:
+
+            in_val = -1
+            while in_val != "y" and in_val != "n":
+                try:
+                    in_val = input(f"your character has: {' or '.join(current_properties)} y/n?: ").lower()
+                except:
+                    print("Invalid value")
+                    
+            if(in_val == "y"):
+                has_property = True
+            elif(in_val == "n"):
+                has_property = False
+            else:
+                raise Exception(">:(")
 
            # update props
         properties = update_properties(properties, current_properties, has_property)
@@ -160,10 +177,22 @@ def find_character(choosen_character, select_propertie_func = select_propertie):
         
 
 def main():
-    print(', '.join(CHARACTERS))
-    choosen_character = input("Choose a character: ")
-    if choosen_character not in CHARACTERS:
-        choosen_character = random.choice(CHARACTERS)
-    find_character(choosen_character)
+    in_val = -1
+
+    while in_val < 0 or in_val > 1:
+        try:
+            in_val = int(input("Choose mode {0}Versus or {1}Auto: "))
+        except:
+            print("Invalid value")
+
+    choosen_character = ""
+
+    if in_val == 1:
+        print(', '.join(CHARACTERS))
+        choosen_character = input("Choose a character: ")
+        if choosen_character not in CHARACTERS:
+            choosen_character = random.choice(CHARACTERS)
+
+    find_character(choosen_character, bool(in_val))
 
 main()
