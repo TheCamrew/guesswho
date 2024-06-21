@@ -4,6 +4,11 @@ Agente inteligente para Guess Who (¿Quién es quién?)
 
 Este código permite adivinar el personaje mediante consultas a una base de datos Prolog.
 
+## Uso
+
+- Ejecutar guesswho.py
+- Elegir modo de funcionamiento: Versus (Permite usarse en una partida normal), Auto (se ejecuta hasta encontrar la solucion)
+
 ## Optimización VS Busquedas
 
 El quién es quién es un buen ejemplo de problema de optimización puesto que el rendimiento de la partida depende completamente de la calidad de las preguntas realizadas. En el caso de que las cuestiones abarquen demasiados personajes no nos facilitarán demasiada información, y en caso de ser demasiado precisas es más complicado que nos den información relevante. Por este motivo es muy importante encontrar un balance a la hora de realizar las preguntas para maximizar la información obtenida.
