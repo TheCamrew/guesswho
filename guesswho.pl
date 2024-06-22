@@ -23,5 +23,5 @@ character(anita, [blue_eyes, woman, blonde_hair, rosy_cheeks]).
 character(susan, [woman, white_hair, rosy_cheeks]).
 character(anne, [woman, black_hair]).
 
-character_property(C, P) :-
+character_has_property(C, P) :-
     character(C, Props), member(P, Props).
