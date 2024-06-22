@@ -50,10 +50,10 @@ Cada personaje está representado como un predicado que contiene su nombre como 
 - Clona el proyecto
 - Inicializa el entorno virtual y actívalo.
 ```bash
-$ conda create -n guesswho python=3.10
-$ conda activate guesswho
+conda create -n guesswho python=3.10
+conda activate guesswho
 ```
 - Instala las dependencias.
 ```bash
-$ pip install -r requirements.txt
+pip install -r requirements.txt
 ```
