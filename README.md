@@ -21,9 +21,12 @@ Entorno de tareas | Observable| Agentes | Determinista | Episódico | Estático 
 
 ## Algoritmo
 
-Este algoritmo busca seleccionar características de los personajes de forma que se creen dos grupos del mismo tamaño. De esta forma, empezando con 24 personajes, la primera pregunta podría ser "¿Tu personaje es calvo, y tiene gafas y las mejillas rojas?", separando los personajes en dos grupos de 12. Y continuaría de esta forma hasta encontrar al personaje correcto.
+En las reglas del Quien es Quien se explica que se deben hacer preguntas de sí o no, sin importar el numero de características mencionadas. Por lo que este algoritmo busca seleccionar características de los personajes de forma que se creen dos grupos del mismo tamaño. De esta forma, empezando con 24 personajes, la primera pregunta podría ser "¿Tu personaje es calvo, y tiene gafas y las mejillas rojas?", separando los personajes en dos grupos de 12. Y continuaría de esta forma hasta encontrar al personaje correcto.
 
 Por lo que, en promedio, el personaje se acertará en unos 6 intentos.
+
+[Optimal strategy for ‘Guess Who?’?](https://www.lancaster.ac.uk/stor-i-student-sites/edward-mellor/2020/02/26/optimal-strategy-for-guess-who/#:~:text=Each%20player%20is%20allocated%20one,guess%20the%20other%20person's%20character.&text=The%20player%20who%20eliminates%20all,of%20moves%20is%20the%20winner.)
+
 
 ## Estructura del agente
 
